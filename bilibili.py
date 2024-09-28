@@ -3,8 +3,9 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 '''
 爬取bilibili视频
-made by klpyx
+made by klpyx (github:MCIOXZ)
 open-source license:MP2.0(Mozilla Public License)
+github项目地址：https://github.com/MCIOXZ/getBilibili
 '''
 import requests #请求页面，下载文件
 import re #正则表达式匹配json内容
@@ -125,7 +126,7 @@ class HTMLDomTree(HTMLParser): #从html文件中解析内容 (ai写的，赞美g
     if self.in_title:
       self.title += data
 
-def fullwidth_to_halfwidth(s): #字符串中所有全角字符转换成半角字符（也是ai写的）
+def fullwidth_to_halfwidth(s): #字符串中所有全角字符转换成半角字符（这个也是ai写的）
     result = []
     for char in s:
         code_point = ord(char)
@@ -267,10 +268,10 @@ def mergeAudioAndVideo(videoFilePath,audioFilePath,outputFilePath,ffmpegRunFile=
         FLog.log("Error mergeAudioAndVideo:在调用mergeAudioAndVideo函数前请先设置mergeAudioVideo为True")
         print("Error mergeAudioAndVideo:在调用mergeAudioAndVideo函数前请先设置mergeAudioVideo为True")
         return
-    Command=f"{ffmpegRunFile} -i {videoFilePath} -i {audioFilePath} {otherOptions} -acodec copy -vcodec copy {outputFilePath}" #组成命令
+    Command=f'"{ffmpegRunFile}" -i "{videoFilePath}" -i "{audioFilePath}" {otherOptions} -acodec copy -vcodec copy "{outputFilePath}"' #组成命令
     runCommmand=subprocess.run(Command,shell=True,stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE,text=True,encoding=encoding) # type: ignore #使vscode忽略
     printCommand=str(runCommmand.stdout)+str(runCommmand.stderr) #提取输出
-    FLog.log({"ffmpegPrint":printCommand,"path":outputFilePath})
+    FLog.log({"ffmpegPrint":printCommand,"path":outputFilePath,"command":Command})
     if runCommmand.returncode==0: #subprocess.run的returncode==0代表正常结束
         return {"type":"OK","ffmpegPrint":printCommand,"path":outputFilePath}
     else:
